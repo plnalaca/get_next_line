@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: palaca <palaca@student.42.fr>              +#+  +:+       +#+        */
+/*   By: pelin <pelin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 15:21:10 by palaca            #+#    #+#             */
-/*   Updated: 2024/12/21 15:45:35 by palaca           ###   ########.fr       */
+/*   Updated: 2024/12/21 19:43:41 by pelin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,19 +21,20 @@ static char *read_fd(int fd, char *buffer, char *buf)
 	{
 		i = read(fd, buffer, BUFFER_SIZE);
 		if(i < 0)
-			return( NULL);
+			return(free(buffer), NULL);
 		if(i == 0)
 			break;
+		buffer[i] = '\0';
 		if(!buf)
 		{
 			buf = malloc(sizeof(char) * 1);
 			buf[0] = '\0';
 		}
-		buffer[i] = '\0';
 		buf = ft_strjoin(buf, buffer);
 		if(ft_strchr(buffer, '\n'))
 			break;
 	}
+	free(buffer);
 	return(buf);
 }
 static char *find_line(char *tmp)
@@ -61,22 +62,20 @@ char *get_next_line(int fd)
 {
 	char *buffer;
 	char *tmp;
-	static char *buf;
+	static char *buf[1024];
 	
 	if(fd < 0 || BUFFER_SIZE <= 0)
 		return(NULL);
 	buffer = malloc(sizeof(char) * (BUFFER_SIZE + 1));
 	if(!buffer)
-		return(NULL);
-	tmp = read_fd(fd, buffer, buf);
-	free(buffer);
+		return(free(buffer), NULL);
+	tmp = read_fd(fd, buffer, buf[fd]);
 	if(!tmp)
 	{
-		free(buf);
+		free(buf[fd]);
+		buf[fd] = NULL;
 		return(NULL);
 	}
-	buf = find_line(tmp);
-	if (!buf)
-        free(tmp);
+	buf[fd] = find_line(tmp);
 	return(tmp);
 }
