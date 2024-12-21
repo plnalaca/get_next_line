@@ -6,7 +6,7 @@
 /*   By: palaca <palaca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 15:21:10 by palaca            #+#    #+#             */
-/*   Updated: 2024/12/20 06:23:25 by palaca           ###   ########.fr       */
+/*   Updated: 2024/12/21 15:45:35 by palaca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,12 +24,12 @@ static char *read_fd(int fd, char *buffer, char *buf)
 			return( NULL);
 		if(i == 0)
 			break;
-		buffer[i] = '\0';
 		if(!buf)
 		{
 			buf = malloc(sizeof(char) * 1);
 			buf[0] = '\0';
 		}
+		buffer[i] = '\0';
 		buf = ft_strjoin(buf, buffer);
 		if(ft_strchr(buffer, '\n'))
 			break;
@@ -67,7 +67,7 @@ char *get_next_line(int fd)
 		return(NULL);
 	buffer = malloc(sizeof(char) * (BUFFER_SIZE + 1));
 	if(!buffer)
-		return(free(buffer), NULL);
+		return(NULL);
 	tmp = read_fd(fd, buffer, buf);
 	free(buffer);
 	if(!tmp)
