@@ -62,20 +62,20 @@ char *get_next_line(int fd)
 {
 	char *buffer;
 	char *tmp;
-	static char *buf[1024];
+	static char *buf;
 	
 	if(fd < 0 || BUFFER_SIZE <= 0)
 		return(NULL);
 	buffer = malloc(sizeof(char) * (BUFFER_SIZE + 1));
 	if(!buffer)
 		return(free(buffer), NULL);
-	tmp = read_fd(fd, buffer, buf[fd]);
+	tmp = read_fd(fd, buffer, buf);
 	if(!tmp)
 	{
-		free(buf[fd]);
-		buf[fd] = NULL;
+		free(buf);
+		buf = NULL;
 		return(NULL);
 	}
-	buf[fd] = find_line(tmp);
+	buf = find_line(tmp);
 	return(tmp);
 }

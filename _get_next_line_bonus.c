@@ -6,11 +6,11 @@
 /*   By: palaca <palaca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/20 09:19:52 by palaca            #+#    #+#             */
-/*   Updated: 2024/12/20 09:38:06 by palaca           ###   ########.fr       */
+/*   Updated: 2024/12/21 19:47:32 by palaca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line_bonus.h"
+#include "get_next_line.h"
 
 static char *read_fd(int fd, char *buffer, char *buf)
 {
@@ -21,7 +21,7 @@ static char *read_fd(int fd, char *buffer, char *buf)
 	{
 		i = read(fd, buffer, BUFFER_SIZE);
 		if(i < 0)
-			return( NULL);
+			return(free(buffer), NULL);
 		if(i == 0)
 			break;
 		buffer[i] = '\0';
@@ -34,6 +34,7 @@ static char *read_fd(int fd, char *buffer, char *buf)
 		if(ft_strchr(buffer, '\n'))
 			break;
 	}
+	free(buffer);
 	return(buf);
 }
 static char *find_line(char *tmp)
@@ -60,22 +61,21 @@ static char *find_line(char *tmp)
 char *get_next_line(int fd)
 {
 	char *buffer;
-	char *tmp[1024];
+	char *tmp;
 	static char *buf[1024];
 	
 	if(fd < 0 || BUFFER_SIZE <= 0)
 		return(NULL);
+	buffer = malloc(sizeof(char) * (BUFFER_SIZE + 1));
 	if(!buffer)
 		return(free(buffer), NULL);
-	tmp[fd] = read_fd(fd, buffer, buf[fd]);
-	free(buffer);
-	if(!tmp[fd])
+	tmp = read_fd(fd, buffer, buf[fd]);
+	if(!tmp)
 	{
-		free(buf);
+		free(buf[fd]);
+		buf[fd] = NULL;
 		return(NULL);
 	}
-	buf[fd] = find_line(tmp[fd]);
-	if (!buf)
-        free(tmp);
-	return(tmp[fd]);
+	buf[fd] = find_line(tmp);
+	return(tmp);
 }
