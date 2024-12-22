@@ -6,76 +6,76 @@
 /*   By: pelin <pelin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 15:21:10 by palaca            #+#    #+#             */
-/*   Updated: 2024/12/21 19:43:41 by pelin            ###   ########.fr       */
+/*   Updated: 2024/12/22 18:36:41 by pelin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-static char *read_fd(int fd, char *buffer, char *buf)
+static char	*read_fd(int fd, char *buffer, char *buf)
 {
-	int i;
+	int	i;
 
 	i = 1;
-	while(i != 0)
+	while (i != 0)
 	{
 		i = read(fd, buffer, BUFFER_SIZE);
-		if(i < 0)
-			return(free(buffer), NULL);
-		if(i == 0)
-			break;
+		if (i < 0)
+			return (free(buffer), NULL);
+		if (i == 0)
+			break ;
 		buffer[i] = '\0';
-		if(!buf)
+		if (!buf)
 		{
 			buf = malloc(sizeof(char) * 1);
 			buf[0] = '\0';
 		}
 		buf = ft_strjoin(buf, buffer);
-		if(ft_strchr(buffer, '\n'))
-			break;
+		if (ft_strchr(buffer, '\n'))
+			break ;
 	}
-	free(buffer);
-	return(buf);
+	free (buffer);
+	return (buf);
 }
-static char *find_line(char *tmp)
+
+static char	*find_line(char *tmp)
 {
-	int i;
-	char *next_line;
+	int		i;
+	char	*next_line;
 
 	i = 0;
-	while(tmp[i] != '\n' && tmp[i] != '\0')
+	while (tmp[i] != '\n' && tmp[i] != '\0')
 		i++;
-	if(tmp[i] == '\0')
-		return(NULL);
+	if (tmp[i] == '\0')
+		return (NULL);
 	next_line = ft_substr(tmp, i + 1, ft_strlen(tmp) - i);
 	tmp[i + 1] = '\0';
-	if(next_line[0] == '\0')
+	if (next_line[0] == '\0')
 	{
-		free(next_line);
+		free (next_line);
 		next_line = NULL;
 	}
-	return(next_line);
-	
+	return (next_line);
 }
 
-char *get_next_line(int fd)
+char	*get_next_line(int fd)
 {
-	char *buffer;
-	char *tmp;
-	static char *buf;
-	
-	if(fd < 0 || BUFFER_SIZE <= 0)
-		return(NULL);
+	char		*buffer;
+	char		*tmp;
+	static char	*buf;
+
+	if (fd < 0 || BUFFER_SIZE <= 0)
+		return (NULL);
 	buffer = malloc(sizeof(char) * (BUFFER_SIZE + 1));
-	if(!buffer)
-		return(free(buffer), NULL);
+	if (!buffer)
+		return (free(buffer), NULL);
 	tmp = read_fd(fd, buffer, buf);
-	if(!tmp)
+	if (!tmp)
 	{
 		free(buf);
 		buf = NULL;
-		return(NULL);
+		return (NULL);
 	}
 	buf = find_line(tmp);
-	return(tmp);
+	return (tmp);
 }

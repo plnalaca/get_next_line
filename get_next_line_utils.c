@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line_utils.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: palaca <palaca@student.42.fr>              +#+  +:+       +#+        */
+/*   By: pelin <pelin@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 15:21:07 by palaca            #+#    #+#             */
-/*   Updated: 2024/12/17 22:40:33 by palaca           ###   ########.fr       */
+/*   Updated: 2024/12/22 18:37:40 by pelin            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ size_t	ft_strlen(const char *s)
 	}
 	return (i);
 }
+
 char	*ft_substr(char *s, unsigned int start, size_t len)
 {
 	size_t	i;
@@ -46,9 +47,10 @@ char	*ft_substr(char *s, unsigned int start, size_t len)
 	str[j] = '\0';
 	return (str);
 }
+
 char	*ft_strchr(char *s, int i)
 {
-while (*s)
+	while (*s)
 	{
 		if (*s == i)
 			return ((char *)s);
@@ -58,6 +60,7 @@ while (*s)
 		return ((char *)s);
 	return (0);
 }
+
 char	*ft_strjoin(char *s1, char *s2)
 {
 	int		i;
